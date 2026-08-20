@@ -1,5 +1,5 @@
 // =========================================================
-// Jesús García — Portfolio de diseño y branding — main.js
+// Alejandro Hernández — Marketing Lab — main.js
 // =========================================================
 (function () {
   "use strict";
@@ -7,7 +7,6 @@
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var isTouch = window.matchMedia("(hover: none)").matches;
 
-  // ---------- Nav scroll state ----------
   var nav = document.getElementById("nav");
   function onScroll() {
     if (!nav) return;
@@ -16,7 +15,6 @@
   }
   window.addEventListener("scroll", onScroll, { passive: true });
 
-  // ---------- Scroll progress bar ----------
   var progressBar = document.getElementById("scrollProgress");
   function updateProgress() {
     if (!progressBar) return;
@@ -28,7 +26,6 @@
   }
   updateProgress();
 
-  // ---------- Mobile nav toggle ----------
   var navToggle = document.getElementById("navToggle");
   var navLinks = document.getElementById("navLinks");
   if (navToggle && navLinks) {
@@ -46,7 +43,6 @@
     });
   }
 
-  // ---------- Scroll reveal ----------
   var revealEls = document.querySelectorAll(".reveal");
   if ("IntersectionObserver" in window && !reduceMotion) {
     var io = new IntersectionObserver(
@@ -69,15 +65,13 @@
     });
   }
 
-  // ---------- Subtle cursor tilt on project media (desktop only) ----------
   if (!isTouch && !reduceMotion) {
     document.querySelectorAll(".project-media").forEach(function (el) {
       el.addEventListener("mousemove", function (e) {
         var r = el.getBoundingClientRect();
         var x = (e.clientX - r.left) / r.width - 0.5;
         var y = (e.clientY - r.top) / r.height - 0.5;
-        el.style.transform =
-          "rotateY(" + (x * 5).toFixed(2) + "deg) rotateX(" + (-y * 5).toFixed(2) + "deg)";
+        el.style.transform = "rotateY(" + (x * 4).toFixed(2) + "deg) rotateX(" + (-y * 4).toFixed(2) + "deg)";
       });
       el.addEventListener("mouseleave", function () {
         el.style.transform = "rotateY(0deg) rotateX(0deg)";
@@ -85,8 +79,7 @@
     });
   }
 
-  // ---------- Active nav section indicator ----------
-  var sections = ["sobre-mi", "servicios", "proyectos", "proceso", "credenciales", "contacto"]
+  var sections = ["sobre-mi", "servicios", "proyectos", "proceso", "ia-data", "experiencia", "contacto"]
     .map(function (id) {
       return document.getElementById(id);
     })
@@ -110,7 +103,31 @@
     });
   }
 
-  // ---------- Current year in footer ----------
+  // ---------- Orbit layout for AI tools ----------
+  function layoutOrbit() {
+    var wrap = document.querySelector(".orbit-wrap");
+    if (!wrap) return;
+    var nodes = wrap.querySelectorAll(".orbit-node");
+    var w = wrap.offsetWidth;
+    var h = wrap.offsetHeight;
+    var cx = w / 2;
+    var cy = h / 2;
+    var n = nodes.length;
+    var innerR = w * 0.29;
+    var outerR = w * 0.46;
+    nodes.forEach(function (node, i) {
+      var radius = i % 2 === 0 ? outerR : innerR;
+      var angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+      var x = cx + radius * Math.cos(angle);
+      var y = cy + radius * Math.sin(angle);
+      node.style.left = x + "px";
+      node.style.top = y + "px";
+      node.style.transform = "translate(-50%, -50%)";
+    });
+  }
+  layoutOrbit();
+  window.addEventListener("resize", layoutOrbit);
+
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 })();
