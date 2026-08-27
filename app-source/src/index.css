@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme {
+  --font-family-display: 'Anton', sans-serif;
+  --font-family-body: 'Inter', sans-serif;
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  html, body, #root {
+    height: 100%;
+    margin: 0;
+    overscroll-behavior: none;
+  }
+  body {
+    font-family: var(--font-family-body);
+    overflow-x: hidden;
+    background: #000;
+  }
+  img {
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+}
+
+/* ---------- Giant background word ---------- */
+@keyframes wordEnter {
+  from { opacity: 0; transform: translate(-50%, -46%) scale(1.08); filter: blur(6px); }
+  to   { opacity: var(--word-opacity, 0.14); transform: translate(-50%, -50%) scale(1); filter: blur(0px); }
+}
+@keyframes wordExit {
+  from { opacity: var(--word-opacity, 0.14); transform: translate(-50%, -50%) scale(1); filter: blur(0px); }
+  to   { opacity: 0; transform: translate(-50%, -54%) scale(0.94); filter: blur(6px); }
+}
+.animate-word-enter { animation: wordEnter 700ms cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.animate-word-exit  { animation: wordExit 350ms cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+
+/* ---------- Strength panel text ---------- */
+@keyframes panelEnter {
+  from { opacity: 0; transform: translateY(28px); filter: blur(2px); }
+  to   { opacity: 1; transform: translateY(0); filter: blur(0px); }
+}
+@keyframes panelExit {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-20px); }
+}
+.animate-panel-enter { animation: panelEnter 650ms cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.animate-panel-exit  { animation: panelExit 320ms cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+
+/* ---------- Entry animation ---------- */
+@keyframes heroFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(36px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes navIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-hero-fade { animation: heroFadeIn 900ms ease-out forwards; }
+.animate-rise-in { animation: riseIn 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-nav-in { animation: navIn 500ms ease-out forwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-word-enter, .animate-word-exit,
+  .animate-panel-enter, .animate-panel-exit,
+  .animate-hero-fade, .animate-rise-in, .animate-nav-in {
+    animation-duration: 1ms !important;
+  }
+}
+
+/* ---------- Film grain overlay ---------- */
+.grain-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }

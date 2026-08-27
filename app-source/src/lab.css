@@ -1,3 +1,4 @@
+@layer components {
 /* =========================================================
    Alejandro Hernández — Marketing · Branding · IA · Data
    Concepto: MARKETING LAB
@@ -341,3 +342,5 @@ footer.site-footer{border-top:1px solid var(--line);padding:30px 0;display:flex;
 footer.site-footer p{font-family:var(--mono);font-size:11px;color:var(--muted-2);}
 
 a:focus-visible,button:focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:4px;}
+
+}
