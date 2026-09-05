@@ -235,21 +235,23 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
       {/* Radial lighting behind active photo */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute top-[46%] h-[70vh] w-[70vh] -translate-x-1/2 -translate-y-1/2"
+        className="pointer-events-none absolute h-[70vh] w-[70vh] -translate-x-1/2 -translate-y-1/2"
         style={{
           left: isMobile ? '50%' : '70%',
+          top: isMobile ? '38%' : '46%',
           background:
             'radial-gradient(circle at center, rgba(255,255,255,0.22), transparent 55%)',
-          transition: 'opacity 700ms ease, left 700ms ease',
+          transition: 'opacity 700ms ease, left 700ms ease, top 700ms ease',
         }}
       />
 
       {/* Giant ghost typography */}
       <div
-        className="pointer-events-none absolute top-1/2 text-center"
+        className="pointer-events-none absolute text-center"
         aria-hidden="true"
         style={{
           left: isMobile ? '50%' : '3%',
+          top: isMobile ? '40%' : '50%',
           width: isMobile ? '100%' : '42%',
           textAlign: isMobile ? 'center' : 'left',
           transform: `translate(${isMobile ? -50 : 0}%, -50%) translate(${parallax.x * -10}px, ${parallax.y * -6}px)`,
@@ -344,8 +346,8 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
           className="absolute -translate-x-1/2"
           style={{
             left: isMobile ? '50%' : '70%',
-            top: isMobile ? '54%' : '52%',
-            height: isMobile ? '46vh' : '66vh',
+            top: isMobile ? '38%' : '52%',
+            height: isMobile ? '58vh' : '66vh',
             width: isMobile ? '62vw' : '30vw',
             maxWidth: isMobile ? '360px' : '440px',
             transformStyle: 'preserve-3d',
