@@ -16,6 +16,18 @@ import { useReducedMotion } from '../hooks/useReducedMotion';
 const COUNT = IMAGES.length;
 const LOCK_MS = 700;
 
+// Per-word vw coefficient so every ghost word fills a similar visual width
+// regardless of how many letters it has (Anton is a condensed display face,
+// so a flat font-size makes long words overflow and short words look tiny).
+const WORD_VW: Record<string, number> = {
+  CREATIVITY: 15.5,
+  STRATEGY: 17,
+  COMMUNICATION: 10.5,
+  ADAPTABILITY: 13,
+  LEADERSHIP: 14.3,
+};
+const wordFontSize = (word: string) => `clamp(64px, ${WORD_VW[word] ?? 14}vw, 260px)`;
+
 type Role = 'center' | 'left' | 'right' | 'back' | 'farBack' | 'hidden';
 
 interface RoleStyle {
@@ -30,19 +42,19 @@ interface RoleStyle {
 }
 
 const DESKTOP_ROLES: Record<Exclude<Role, 'hidden'>, RoleStyle> = {
-  center: { x: 0, y: 0, z: 0, rotateY: 0, scale: 1.4, opacity: 1, blur: 0, zIndex: 30 },
-  left: { x: -300, y: 30, z: -180, rotateY: 18, scale: 0.75, opacity: 0.65, blur: 1, zIndex: 20 },
-  right: { x: 300, y: 30, z: -180, rotateY: -18, scale: 0.75, opacity: 0.65, blur: 1, zIndex: 20 },
-  back: { x: -110, y: 55, z: -350, rotateY: 10, scale: 0.58, opacity: 0.3, blur: 4, zIndex: 10 },
-  farBack: { x: 110, y: 70, z: -500, rotateY: -8, scale: 0.45, opacity: 0.15, blur: 7, zIndex: 5 },
+  center: { x: 0, y: 0, z: 0, rotateY: 0, scale: 1.85, opacity: 1, blur: 0, zIndex: 30 },
+  left: { x: -300, y: 30, z: -180, rotateY: 18, scale: 0.9, opacity: 0.65, blur: 1, zIndex: 20 },
+  right: { x: 300, y: 30, z: -180, rotateY: -18, scale: 0.9, opacity: 0.65, blur: 1, zIndex: 20 },
+  back: { x: -110, y: 55, z: -350, rotateY: 10, scale: 0.68, opacity: 0.3, blur: 4, zIndex: 10 },
+  farBack: { x: 110, y: 70, z: -500, rotateY: -8, scale: 0.52, opacity: 0.15, blur: 7, zIndex: 5 },
 };
 
 const MOBILE_ROLES: Record<Exclude<Role, 'hidden'>, RoleStyle> = {
-  center: { x: 0, y: 0, z: 0, rotateY: 0, scale: 1.05, opacity: 1, blur: 0, zIndex: 30 },
-  left: { x: -120, y: 20, z: -140, rotateY: 14, scale: 0.55, opacity: 0.45, blur: 1.5, zIndex: 20 },
-  right: { x: 120, y: 20, z: -140, rotateY: -14, scale: 0.55, opacity: 0.45, blur: 1.5, zIndex: 20 },
-  back: { x: 0, y: 30, z: -260, rotateY: 0, scale: 0.4, opacity: 0, blur: 4, zIndex: 10 },
-  farBack: { x: 0, y: 30, z: -300, rotateY: 0, scale: 0.35, opacity: 0, blur: 5, zIndex: 5 },
+  center: { x: 0, y: 0, z: 0, rotateY: 0, scale: 1.4, opacity: 1, blur: 0, zIndex: 30 },
+  left: { x: -120, y: 20, z: -140, rotateY: 14, scale: 0.65, opacity: 0.45, blur: 1.5, zIndex: 20 },
+  right: { x: 120, y: 20, z: -140, rotateY: -14, scale: 0.65, opacity: 0.45, blur: 1.5, zIndex: 20 },
+  back: { x: 0, y: 30, z: -260, rotateY: 0, scale: 0.48, opacity: 0, blur: 4, zIndex: 10 },
+  farBack: { x: 0, y: 30, z: -300, rotateY: 0, scale: 0.42, opacity: 0, blur: 5, zIndex: 5 },
 };
 
 function getRole(index: number, activeIndex: number): Role {
@@ -222,7 +234,7 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
       <div
         className="pointer-events-none absolute left-1/2 top-1/2 w-full text-center"
         aria-hidden="true"
-        style={{ transform: `translate(${parallax.x * -10}px, ${parallax.y * -6}px)` }}
+        style={{ transform: `translate(-50%, -50%) translate(${parallax.x * -10}px, ${parallax.y * -6}px)` }}
       >
         {prevIndex !== null && (
           <span
@@ -231,9 +243,9 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
             style={
               {
                 fontFamily: 'var(--font-family-display)',
-                fontSize: 'clamp(100px, 20vw, 330px)',
-                fontWeight: 900,
-                letterSpacing: '-0.04em',
+                fontSize: wordFontSize(IMAGES[prevIndex].strength),
+                fontWeight: 400,
+                letterSpacing: '-0.02em',
                 lineHeight: 0.8,
                 color: '#fff',
                 '--word-opacity': 0.14,
@@ -249,9 +261,9 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
           style={
             {
               fontFamily: 'var(--font-family-display)',
-              fontSize: 'clamp(100px, 20vw, 330px)',
-              fontWeight: 900,
-              letterSpacing: '-0.04em',
+              fontSize: wordFontSize(active.strength),
+              fontWeight: 400,
+              letterSpacing: '-0.02em',
               lineHeight: 0.8,
               color: '#fff',
               '--word-opacity': 0.14,
@@ -308,15 +320,19 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
         style={{ perspective: isMobile ? '900px' : '1400px', perspectiveOrigin: '50% 40%' }}
       >
         <div
-          className="absolute left-1/2 top-[54%] h-[58vh] w-[84vw] max-w-[480px] -translate-x-1/2 sm:h-[64vh] sm:max-w-[540px] lg:h-[74vh] lg:max-w-[640px]"
+          className="absolute left-1/2 top-[54%] h-[46vh] w-[56vw] max-w-[340px] -translate-x-1/2 sm:h-[52vh] sm:max-w-[370px] lg:h-[58vh] lg:max-w-[400px]"
           style={{ transformStyle: 'preserve-3d' }}
         >
           {orderedByRole.map(({ img, role }) => (
             <div
               key={img.src}
-              className="absolute left-1/2 top-1/2 h-full w-full origin-center"
+              className="absolute left-1/2 top-1/2 h-full w-full origin-center overflow-hidden rounded-[18px] shadow-2xl sm:rounded-[22px]"
               style={{
                 ...photoTransform(role, role === 'center' ? 1 : 0.4),
+                boxShadow:
+                  role === 'center'
+                    ? '0 40px 90px -20px rgba(0,0,0,0.45)'
+                    : '0 20px 40px -15px rgba(0,0,0,0.3)',
                 perspective: role === 'center' ? (isMobile ? '700px' : '1000px') : undefined,
               }}
               aria-hidden={role !== 'center'}
@@ -331,14 +347,7 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
                   alt={role === 'center' ? `${active.strength}: ${active.title}` : ''}
                   draggable={false}
                   className="h-full w-full"
-                  style={{
-                    objectFit: 'contain',
-                    objectPosition: 'center bottom',
-                    filter:
-                      role === 'center'
-                        ? 'drop-shadow(0 35px 55px rgba(0,0,0,0.45))'
-                        : 'drop-shadow(0 18px 30px rgba(0,0,0,0.3))',
-                  }}
+                  style={{ objectFit: 'contain', objectPosition: 'center bottom' }}
                 />
               </div>
             </div>
