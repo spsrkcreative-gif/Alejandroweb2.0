@@ -308,19 +308,15 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
         style={{ perspective: isMobile ? '900px' : '1400px', perspectiveOrigin: '50% 40%' }}
       >
         <div
-          className="absolute left-1/2 top-[54%] h-[46vh] w-[70vw] max-w-[420px] -translate-x-1/2 sm:h-[52vh] sm:max-w-[460px] lg:h-[58vh] lg:max-w-[520px]"
+          className="absolute left-1/2 top-[54%] h-[58vh] w-[84vw] max-w-[480px] -translate-x-1/2 sm:h-[64vh] sm:max-w-[540px] lg:h-[74vh] lg:max-w-[640px]"
           style={{ transformStyle: 'preserve-3d' }}
         >
           {orderedByRole.map(({ img, role }) => (
             <div
               key={img.src}
-              className="absolute left-1/2 top-1/2 h-full w-full origin-center overflow-hidden rounded-[18px] shadow-2xl sm:rounded-[22px]"
+              className="absolute left-1/2 top-1/2 h-full w-full origin-center"
               style={{
                 ...photoTransform(role, role === 'center' ? 1 : 0.4),
-                boxShadow:
-                  role === 'center'
-                    ? '0 40px 90px -20px rgba(0,0,0,0.45)'
-                    : '0 20px 40px -15px rgba(0,0,0,0.3)',
                 perspective: role === 'center' ? (isMobile ? '700px' : '1000px') : undefined,
               }}
               aria-hidden={role !== 'center'}
@@ -335,7 +331,14 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
                   alt={role === 'center' ? `${active.strength}: ${active.title}` : ''}
                   draggable={false}
                   className="h-full w-full"
-                  style={{ objectFit: 'contain', objectPosition: 'center bottom' }}
+                  style={{
+                    objectFit: 'contain',
+                    objectPosition: 'center bottom',
+                    filter:
+                      role === 'center'
+                        ? 'drop-shadow(0 35px 55px rgba(0,0,0,0.45))'
+                        : 'drop-shadow(0 18px 30px rgba(0,0,0,0.3))',
+                  }}
                 />
               </div>
             </div>
