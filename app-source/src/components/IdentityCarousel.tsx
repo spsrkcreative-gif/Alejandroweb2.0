@@ -19,14 +19,27 @@ const LOCK_MS = 700;
 // Per-word vw coefficient so every ghost word fills a similar visual width
 // regardless of how many letters it has (Anton is a condensed display face,
 // so a flat font-size makes long words overflow and short words look tiny).
-const WORD_VW: Record<string, number> = {
+// Two sets: mobile (word centered full-bleed) and desktop (word confined to
+// the left column, photo lives in the right column).
+const WORD_VW_MOBILE: Record<string, number> = {
   CREATIVITY: 15.5,
   STRATEGY: 17,
   COMMUNICATION: 10.5,
   ADAPTABILITY: 13,
   LEADERSHIP: 14.3,
 };
-const wordFontSize = (word: string) => `clamp(64px, ${WORD_VW[word] ?? 14}vw, 260px)`;
+const WORD_VW_DESKTOP: Record<string, number> = {
+  CREATIVITY: 6.7,
+  STRATEGY: 7.3,
+  COMMUNICATION: 4.5,
+  ADAPTABILITY: 5.6,
+  LEADERSHIP: 6.1,
+};
+const wordFontSize = (word: string, isMobile: boolean) => {
+  const map = isMobile ? WORD_VW_MOBILE : WORD_VW_DESKTOP;
+  const vw = map[word] ?? (isMobile ? 14 : 6);
+  return isMobile ? `clamp(64px, ${vw}vw, 260px)` : `clamp(52px, ${vw}vw, 190px)`;
+};
 
 type Role = 'center' | 'left' | 'right' | 'back' | 'farBack' | 'hidden';
 
@@ -42,11 +55,11 @@ interface RoleStyle {
 }
 
 const DESKTOP_ROLES: Record<Exclude<Role, 'hidden'>, RoleStyle> = {
-  center: { x: 0, y: 0, z: 0, rotateY: 0, scale: 1.85, opacity: 1, blur: 0, zIndex: 30 },
-  left: { x: -300, y: 30, z: -180, rotateY: 18, scale: 0.9, opacity: 0.65, blur: 1, zIndex: 20 },
-  right: { x: 300, y: 30, z: -180, rotateY: -18, scale: 0.9, opacity: 0.65, blur: 1, zIndex: 20 },
-  back: { x: -110, y: 55, z: -350, rotateY: 10, scale: 0.68, opacity: 0.3, blur: 4, zIndex: 10 },
-  farBack: { x: 110, y: 70, z: -500, rotateY: -8, scale: 0.52, opacity: 0.15, blur: 7, zIndex: 5 },
+  center: { x: 0, y: 0, z: 0, rotateY: 0, scale: 1.9, opacity: 1, blur: 0, zIndex: 30 },
+  left: { x: -260, y: 30, z: -180, rotateY: 18, scale: 1, opacity: 0.5, blur: 1, zIndex: 20 },
+  right: { x: 260, y: 30, z: -180, rotateY: -18, scale: 1, opacity: 0.5, blur: 1, zIndex: 20 },
+  back: { x: -100, y: 55, z: -350, rotateY: 10, scale: 0.75, opacity: 0.22, blur: 4, zIndex: 10 },
+  farBack: { x: 100, y: 70, z: -500, rotateY: -8, scale: 0.58, opacity: 0.1, blur: 7, zIndex: 5 },
 };
 
 const MOBILE_ROLES: Record<Exclude<Role, 'hidden'>, RoleStyle> = {
@@ -222,33 +235,40 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
       {/* Radial lighting behind active photo */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-[46%] h-[70vh] w-[70vh] -translate-x-1/2 -translate-y-1/2"
+        className="pointer-events-none absolute top-[46%] h-[70vh] w-[70vh] -translate-x-1/2 -translate-y-1/2"
         style={{
+          left: isMobile ? '50%' : '70%',
           background:
             'radial-gradient(circle at center, rgba(255,255,255,0.22), transparent 55%)',
-          transition: 'opacity 700ms ease',
+          transition: 'opacity 700ms ease, left 700ms ease',
         }}
       />
 
       {/* Giant ghost typography */}
       <div
-        className="pointer-events-none absolute left-1/2 top-1/2 w-full text-center"
+        className="pointer-events-none absolute top-1/2 text-center"
         aria-hidden="true"
-        style={{ transform: `translate(-50%, -50%) translate(${parallax.x * -10}px, ${parallax.y * -6}px)` }}
+        style={{
+          left: isMobile ? '50%' : '3%',
+          width: isMobile ? '100%' : '42%',
+          textAlign: isMobile ? 'center' : 'left',
+          transform: `translate(${isMobile ? -50 : 0}%, -50%) translate(${parallax.x * -10}px, ${parallax.y * -6}px)`,
+        }}
       >
         {prevIndex !== null && (
           <span
             key={`word-prev-${prevIndex}`}
-            className="animate-word-exit absolute left-1/2 top-1/2 block whitespace-nowrap"
+            className={`animate-word-exit absolute top-1/2 block whitespace-nowrap ${isMobile ? 'left-1/2' : 'left-0'}`}
             style={
               {
                 fontFamily: 'var(--font-family-display)',
-                fontSize: wordFontSize(IMAGES[prevIndex].strength),
+                fontSize: wordFontSize(IMAGES[prevIndex].strength, isMobile),
                 fontWeight: 400,
                 letterSpacing: '-0.02em',
                 lineHeight: 0.8,
                 color: '#fff',
                 '--word-opacity': 0.14,
+                '--word-x': isMobile ? '-50%' : '0%',
               } as CSSProperties
             }
           >
@@ -257,16 +277,17 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
         )}
         <span
           key={`word-${activeIndex}`}
-          className="animate-word-enter absolute left-1/2 top-1/2 block whitespace-nowrap"
+          className={`animate-word-enter absolute top-1/2 block whitespace-nowrap ${isMobile ? 'left-1/2' : 'left-0'}`}
           style={
             {
               fontFamily: 'var(--font-family-display)',
-              fontSize: wordFontSize(active.strength),
+              fontSize: wordFontSize(active.strength, isMobile),
               fontWeight: 400,
               letterSpacing: '-0.02em',
               lineHeight: 0.8,
               color: '#fff',
               '--word-opacity': 0.14,
+              '--word-x': isMobile ? '-50%' : '0%',
             } as CSSProperties
           }
         >
@@ -320,8 +341,15 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
         style={{ perspective: isMobile ? '900px' : '1400px', perspectiveOrigin: '50% 40%' }}
       >
         <div
-          className="absolute left-1/2 top-[54%] h-[46vh] w-[56vw] max-w-[340px] -translate-x-1/2 sm:h-[52vh] sm:max-w-[370px] lg:h-[58vh] lg:max-w-[400px]"
-          style={{ transformStyle: 'preserve-3d' }}
+          className="absolute -translate-x-1/2"
+          style={{
+            left: isMobile ? '50%' : '70%',
+            top: isMobile ? '54%' : '52%',
+            height: isMobile ? '46vh' : '66vh',
+            width: isMobile ? '62vw' : '30vw',
+            maxWidth: isMobile ? '360px' : '440px',
+            transformStyle: 'preserve-3d',
+          }}
         >
           {orderedByRole.map(({ img, role }) => (
             <div
