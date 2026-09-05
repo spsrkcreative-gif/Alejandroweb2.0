@@ -14,7 +14,7 @@ export interface ProfileImage {
  */
 export const IMAGES: ProfileImage[] = [
   {
-    src: '/images/profile-01.jpg',
+    src: '/images/profile-01.png',
     strength: 'CREATIVITY',
     title: 'Creatividad que convierte ideas en experiencias',
     description:
@@ -23,7 +23,7 @@ export const IMAGES: ProfileImage[] = [
     panel: '#F29A82',
   },
   {
-    src: '/images/profile-02.jpg',
+    src: '/images/profile-02.png',
     strength: 'STRATEGY',
     title: 'Estrategia con propósito',
     description:
@@ -32,7 +32,7 @@ export const IMAGES: ProfileImage[] = [
     panel: '#79B49F',
   },
   {
-    src: '/images/profile-03.jpg',
+    src: '/images/profile-03.png',
     strength: 'COMMUNICATION',
     title: 'Comunicación que conecta',
     description:
@@ -41,7 +41,7 @@ export const IMAGES: ProfileImage[] = [
     panel: '#E29CB6',
   },
   {
-    src: '/images/profile-04.jpg',
+    src: '/images/profile-04.png',
     strength: 'ADAPTABILITY',
     title: 'Adaptabilidad para evolucionar',
     description:
@@ -50,7 +50,7 @@ export const IMAGES: ProfileImage[] = [
     panel: '#80AFE3',
   },
   {
-    src: '/images/profile-05.jpg',
+    src: '/images/profile-05.png',
     strength: 'LEADERSHIP',
     title: 'Liderazgo para hacer que las ideas sucedan',
     description:

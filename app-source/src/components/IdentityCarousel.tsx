@@ -60,6 +60,8 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
   const [isAnimating, setIsAnimating] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [parallax, setParallax] = useState({ x: 0, y: 0 });
+  const [flipDirection, setFlipDirection] = useState(1);
+  const [enterKey, setEnterKey] = useState(0);
 
   const isMobile = useIsMobile(768);
   const reducedMotion = useReducedMotion();
@@ -90,6 +92,9 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
     (newIndex: number) => {
       if (isAnimating) return;
       const normalized = ((newIndex % COUNT) + COUNT) % COUNT;
+      const forward = ((newIndex - activeIndex + COUNT) % COUNT) === 1;
+      setFlipDirection(forward ? 1 : -1);
+      setEnterKey((k) => k + 1);
       setPrevIndex(activeIndex);
       setActiveIndex(normalized);
       setIsAnimating(true);
@@ -316,16 +321,23 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
                   role === 'center'
                     ? '0 40px 90px -20px rgba(0,0,0,0.45)'
                     : '0 20px 40px -15px rgba(0,0,0,0.3)',
+                perspective: role === 'center' ? (isMobile ? '700px' : '1000px') : undefined,
               }}
               aria-hidden={role !== 'center'}
             >
-              <img
-                src={img.src}
-                alt={role === 'center' ? `${active.strength}: ${active.title}` : ''}
-                draggable={false}
-                className="h-full w-full"
-                style={{ objectFit: 'contain', objectPosition: 'center bottom' }}
-              />
+              <div
+                key={role === 'center' && mounted ? `flip-${enterKey}` : undefined}
+                className={role === 'center' && mounted && !reducedMotion ? 'photo-flip-in h-full w-full' : 'h-full w-full'}
+                style={{ ['--flip-dir' as string]: flipDirection }}
+              >
+                <img
+                  src={img.src}
+                  alt={role === 'center' ? `${active.strength}: ${active.title}` : ''}
+                  draggable={false}
+                  className="h-full w-full"
+                  style={{ objectFit: 'contain', objectPosition: 'center bottom' }}
+                />
+              </div>
             </div>
           ))}
         </div>

@@ -71,6 +71,35 @@
   }
 }
 
+/* ---------- 3D flip on the hero photo as it lands in the center ---------- */
+@keyframes photoFlipIn {
+  0% {
+    transform: rotateY(calc(78deg * var(--flip-dir, 1))) scale(0.82);
+    opacity: 0.35;
+    filter: brightness(0.75);
+  }
+  65% {
+    opacity: 1;
+    filter: brightness(1.05);
+  }
+  100% {
+    transform: rotateY(0deg) scale(1);
+    opacity: 1;
+    filter: brightness(1);
+  }
+}
+.photo-flip-in {
+  animation: photoFlipIn 720ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, opacity, filter;
+}
+@media (prefers-reduced-motion: reduce) {
+  .photo-flip-in {
+    animation-duration: 1ms !important;
+  }
+}
+
 /* ---------- Film grain overlay ---------- */
 .grain-overlay {
   position: absolute;
