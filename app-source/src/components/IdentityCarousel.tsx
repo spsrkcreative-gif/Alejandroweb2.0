@@ -238,7 +238,7 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
         className="pointer-events-none absolute h-[70vh] w-[70vh] -translate-x-1/2 -translate-y-1/2"
         style={{
           left: isMobile ? '50%' : '70%',
-          top: isMobile ? '38%' : '46%',
+          top: isMobile ? '30%' : '46%',
           background:
             'radial-gradient(circle at center, rgba(255,255,255,0.22), transparent 55%)',
           transition: 'opacity 700ms ease, left 700ms ease, top 700ms ease',
@@ -346,7 +346,7 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
           className="absolute -translate-x-1/2"
           style={{
             left: isMobile ? '50%' : '70%',
-            top: isMobile ? '38%' : '52%',
+            top: isMobile ? '29%' : '52%',
             height: isMobile ? '58vh' : '66vh',
             width: isMobile ? '62vw' : '30vw',
             maxWidth: isMobile ? '360px' : '440px',
