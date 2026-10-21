@@ -18,7 +18,7 @@ interface Project {
 const PROJECTS: Project[] = [
   {
     slug: 'la-chef',
-    img: '/lab/lachef.jpg',
+    img: `${import.meta.env.BASE_URL}lab/lachef.jpg`,
     alt: 'Pieza publicitaria de la marca de alimentos La Chef',
     label: 'Marca activa · Dirección de marca',
     title: 'La Chef',
@@ -31,7 +31,7 @@ const PROJECTS: Project[] = [
   {
     slug: 'asimet',
     layout: 'b',
-    img: '/lab/asimet-mark.jpg',
+    img: `${import.meta.env.BASE_URL}lab/asimet-mark.jpg`,
     alt: 'Logotipo Asimet: letra A asimétrica con destellos',
     label: 'Caso de estudio · Identidad de marca',
     title: 'Asimet',
@@ -43,7 +43,7 @@ const PROJECTS: Project[] = [
   },
   {
     slug: 'fullbody',
-    img: '/lab/fullbody.jpg',
+    img: `${import.meta.env.BASE_URL}lab/fullbody.jpg`,
     alt: 'Logotipo Fullbody: ícono hexagonal con letra F, marca de fitness',
     label: 'Identidad de marca · Fitness',
     title: 'Fullbody',
@@ -56,7 +56,7 @@ const PROJECTS: Project[] = [
   {
     slug: 'taxi-center',
     layout: 'b',
-    img: '/lab/taxicenter.jpg',
+    img: `${import.meta.env.BASE_URL}lab/taxicenter.jpg`,
     alt: 'Logotipo Taxi Center sobre fotografía nocturna de ciudad',
     label: 'Identidad de marca · Transporte',
     title: 'Taxi Center',
@@ -67,7 +67,7 @@ const PROJECTS: Project[] = [
   },
   {
     slug: 'spark-creative',
-    img: '/lab/sparkcreative.jpg',
+    img: `${import.meta.env.BASE_URL}lab/sparkcreative.jpg`,
     alt: 'Logotipo Spark Creative: ícono de llama en degradado naranja y azul',
     label: 'Identidad de marca · Estudio creativo',
     title: 'Spark Creative',

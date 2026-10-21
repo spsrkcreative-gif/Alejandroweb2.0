@@ -5,8 +5,10 @@ const LINKS = [
   { id: 'sobre-mi', label: 'Sobre mí' },
   { id: 'servicios', label: 'Servicios' },
   { id: 'proyectos', label: 'Proyectos' },
+  { id: 'agencia', label: 'Agencia' },
   { id: 'ia-data', label: 'IA + Data' },
   { id: 'experiencia', label: 'Experiencia' },
+  { id: 'logro', label: 'Logro' },
 ];
 
 export function Nav() {

@@ -4,6 +4,8 @@ import { Nav } from './components/Nav';
 import { About } from './components/About';
 import { Services } from './components/Services';
 import { Projects } from './components/Projects';
+import { Agency } from './components/Agency';
+import { Achievement } from './components/Achievement';
 import { Process } from './components/Process';
 import { MarketingIA } from './components/MarketingIA';
 import { Experience } from './components/Experience';
@@ -21,9 +23,11 @@ function App() {
         <About />
         <Services />
         <Projects />
+        <Agency />
         <Process />
         <MarketingIA />
         <Experience />
+        <Achievement />
         <MoreThanMarketing />
         <CTAFinal />
         <Contact />
