@@ -16,12 +16,35 @@ export function About() {
         </div>
         <Reveal delay={2} className="about-copy">
           <p>
-            Soy un profesional en formación en <strong>Gerencia de Negocios</strong> y con
-            formación en <strong>Marketing Digital</strong> en la Universidad Tecnológica de
+            Soy estudiante de <strong>Licenciatura en Marketing</strong> y de
+            <strong> Técnico en Marketing Digital</strong> en la Universidad Tecnológica de
             Honduras (UTH). Mi enfoque combina marketing, creatividad, estrategia y tecnología —
             no me defino solo como diseñador ni solo como Community Manager, sino como alguien que
             conecta esas piezas para construir marcas completas.
           </p>
+          <div className="study-progress" aria-label="Avance de estudios en la UTH">
+            {[
+              { name: 'Licenciatura en Marketing', pct: 70 },
+              { name: 'Técnico en Marketing Digital', pct: 95 },
+            ].map((s) => (
+              <div className="study" key={s.name}>
+                <div className="study-top">
+                  <span>{s.name}</span>
+                  <b>{s.pct}%</b>
+                </div>
+                <div
+                  className="study-bar"
+                  role="progressbar"
+                  aria-valuenow={s.pct}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-label={`${s.name}: ${s.pct}% de avance`}
+                >
+                  <i style={{ width: `${s.pct}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
           <p>
             Llegué aquí gestionando redes sociales, catálogos y ventas de negocios reales, y de
             ahí entendí que una marca sin identidad clara pierde ventas, no solo estética. Hoy

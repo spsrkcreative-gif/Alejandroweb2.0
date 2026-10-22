@@ -15,6 +15,9 @@ import { useReducedMotion } from '../hooks/useReducedMotion';
 
 const COUNT = IMAGES.length;
 const LOCK_MS = 700;
+// Tiempo que cada foto permanece antes de pasar sola a la siguiente.
+// 5.5 s alcanza para leer la palabra y ver la foto sin sentirse lento.
+const AUTOPLAY_MS = 5500;
 
 // Per-word vw coefficient so every ghost word fills a similar visual width
 // regardless of how many letters it has (Anton is a condensed display face,
@@ -87,6 +90,8 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
   const [parallax, setParallax] = useState({ x: 0, y: 0 });
   const [flipDirection, setFlipDirection] = useState(1);
   const [enterKey, setEnterKey] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [tabHidden, setTabHidden] = useState(false);
 
   const isMobile = useIsMobile(768);
   const reducedMotion = useReducedMotion();
@@ -143,6 +148,22 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
     },
     []
   );
+
+  // ---------- Autoplay ----------
+  // Se reinicia con cada cambio de foto (también los manuales), y se detiene
+  // con el cursor encima, con la pestaña oculta o si el usuario prefiere menos movimiento.
+  useEffect(() => {
+    const onVis = () => setTabHidden(document.hidden);
+    onVis();
+    document.addEventListener('visibilitychange', onVis);
+    return () => document.removeEventListener('visibilitychange', onVis);
+  }, []);
+
+  useEffect(() => {
+    if (reducedMotion || paused || tabHidden || COUNT < 2) return;
+    const t = setTimeout(() => goTo(activeIndex + 1), AUTOPLAY_MS);
+    return () => clearTimeout(t);
+  }, [activeIndex, paused, tabHidden, reducedMotion, goTo]);
 
   // ---------- Keyboard navigation ----------
   useEffect(() => {
@@ -216,7 +237,11 @@ export default function IdentityCarousel({ standalone = true }: { standalone?: b
       id="top"
       ref={heroRef}
       onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => {
+        onMouseLeave();
+        setPaused(false);
+      }}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
       aria-roledescription="carousel"
